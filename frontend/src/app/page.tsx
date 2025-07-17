@@ -17,11 +17,21 @@ export default function Home() {
     <main className={styles.main}>
       <h1 className={styles.title}>Race Insights</h1>
       <div className={styles.grid}>
-        <LapTimeLine data={sample} />
-        <TyreStintBar data={sample} />
-        <StrategyGantt />
-        <PositionsWaterfall />
-        <TrackEvolution />
+        <div className={styles.chartCard}>
+          <LapTimeLine data={sample} />
+        </div>
+        <div className={styles.chartCard}>
+          <TyreStintBar data={sample} />
+        </div>
+        <div className={styles.chartCard}>
+          <StrategyGantt />
+        </div>
+        <div className={styles.chartCard}>
+          <PositionsWaterfall />
+        </div>
+        <div className={styles.chartCard}>
+          <TrackEvolution />
+        </div>
       </div>
     </main>
   );
