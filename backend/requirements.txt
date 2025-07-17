@@ -76,7 +76,6 @@ ujson==5.10.0
 url-normalize==2.2.1
 urllib3==2.5.0
 uvicorn==0.35.0
-uvloop==0.21.0
 watchfiles==1.1.0
 websockets==13.1
 aiosqlite==0.20.0
