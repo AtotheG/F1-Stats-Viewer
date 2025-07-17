@@ -6,4 +6,6 @@ Development environment:
 docker-compose up --build
 ```
 
-This will start the FastAPI backend, Postgres, Redis, and Next.js frontend.
+This will build and start the FastAPI backend and Next.js frontend along with
+Postgres and Redis. The compose configuration references the Dockerfiles in the
+`backend` and `frontend` directories.
