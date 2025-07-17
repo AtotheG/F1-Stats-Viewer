@@ -1,13 +1,15 @@
 'use client';
-import { BarChart, Bar, XAxis, YAxis, Tooltip } from 'recharts';
+import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip } from 'recharts';
 
 export default function TyreStintBar({ data }: { data: any[] }) {
   return (
-    <BarChart width={400} height={200} data={data}>
-      <XAxis dataKey="stint" />
-      <YAxis />
-      <Tooltip />
-      <Bar dataKey="laps" fill="#82ca9d" />
-    </BarChart>
+    <ResponsiveContainer width="100%" height={300}>
+      <BarChart data={data} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
+        <XAxis dataKey="stint" />
+        <YAxis />
+        <Tooltip />
+        <Bar dataKey="laps" fill="#82ca9d" />
+      </BarChart>
+    </ResponsiveContainer>
   );
 }
