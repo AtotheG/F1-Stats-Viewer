@@ -13,11 +13,14 @@ export default function Home() {
   const sample = laps || [];
   return (
     <main className={styles.main}>
-      <LapTimeLine data={sample} />
-      <TyreStintBar data={sample} />
-      <StrategyGantt />
-      <PositionsWaterfall />
-      <TrackEvolution />
+      <h1 className={styles.title}>Race Insights</h1>
+      <div className={styles.grid}>
+        <LapTimeLine data={sample} />
+        <TyreStintBar data={sample} />
+        <StrategyGantt />
+        <PositionsWaterfall />
+        <TrackEvolution />
+      </div>
     </main>
   );
 }
