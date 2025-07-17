@@ -1,3 +1,5 @@
+'use client';
+
 import { useApi } from '../../lib/useApi';
 
 export default function DriversPage() {
