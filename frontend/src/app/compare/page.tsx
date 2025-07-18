@@ -3,10 +3,16 @@
 import { useState } from 'react';
 import { useApi } from '../../lib/useApi';
 import ComparisonTable from '../../components/ComparisonTable';
+import LapTimeLine from '../../components/charts/LapTimeLine';
 import styles from './compare.module.css';
 
 export default function ComparePage() {
   const { data: drivers } = useApi<any[]>('drivers', '/api/drivers');
+  const sortedDrivers = (drivers || []).slice().sort((a, b) => {
+    const nameA = (a.name ?? '').toLowerCase();
+    const nameB = (b.name ?? '').toLowerCase();
+    return nameA.localeCompare(nameB);
+  });
   const [driver1, setDriver1] = useState('');
   const [driver2, setDriver2] = useState('');
   const [path, setPath] = useState('');
@@ -30,7 +36,7 @@ export default function ComparePage() {
           onChange={(e) => setDriver1(e.target.value)}
         >
           <option value="">Select Driver 1</option>
-          {drivers?.map((d: any) => (
+          {sortedDrivers.map((d: any) => (
             <option key={d.id} value={d.id}>
               {d.name}
             </option>
@@ -42,7 +48,7 @@ export default function ComparePage() {
           onChange={(e) => setDriver2(e.target.value)}
         >
           <option value="">Select Driver 2</option>
-          {drivers?.map((d: any) => (
+          {sortedDrivers.map((d: any) => (
             <option key={d.id} value={d.id}>
               {d.name}
             </option>
@@ -52,7 +58,12 @@ export default function ComparePage() {
           Compare
         </button>
       </div>
-      <ComparisonTable data={comparison || []} />
+      {comparison && comparison.length > 0 && (
+        <>
+          <ComparisonTable data={comparison} />
+          <LapTimeLine data={comparison} />
+        </>
+      )}
     </div>
   );
 }
