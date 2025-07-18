@@ -10,7 +10,7 @@ WORKDIR /app
 COPY frontend/package.json frontend/package-lock.json* ./
 RUN npm install
 COPY frontend ./frontend
-RUN npm run build --workspace frontend || true
+RUN npm run build --workspace frontend
 
 FROM base AS final
 COPY --from=frontend /app/frontend/.next ./frontend/.next
