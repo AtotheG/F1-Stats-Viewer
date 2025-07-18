@@ -33,6 +33,11 @@
   text-decoration: none;
 }
 
+.links li a.active {
+  color: var(--accent);
+  font-weight: 600;
+}
+
 @media (max-width: 768px) {
   .toggle {
     display: block;

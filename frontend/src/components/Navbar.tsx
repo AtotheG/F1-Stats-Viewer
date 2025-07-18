@@ -1,11 +1,13 @@
 'use client';
 import Link from 'next/link';
 import { useState } from 'react';
+import { usePathname } from 'next/navigation';
 import { Menu } from 'lucide-react';
 import styles from './Navbar.module.css';
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
+  const pathname = usePathname();
   return (
     <nav className={styles.navbar}>
       <Link href="/" className={styles.logo}>
@@ -16,16 +18,16 @@ export default function Navbar() {
       </button>
       <ul className={`${styles.links} ${open ? styles.show : ''}`}>
         <li>
-          <Link href="/">Home</Link>
+          <Link href="/" className={pathname === '/' ? styles.active : undefined}>Home</Link>
         </li>
         <li>
-          <Link href="/drivers">Drivers</Link>
+          <Link href="/drivers" className={pathname.startsWith('/drivers') ? styles.active : undefined}>Drivers</Link>
         </li>
         <li>
-          <Link href="/constructors">Constructors</Link>
+          <Link href="/constructors" className={pathname.startsWith('/constructors') ? styles.active : undefined}>Constructors</Link>
         </li>
         <li>
-          <Link href="/compare">Compare</Link>
+          <Link href="/compare" className={pathname.startsWith('/compare') ? styles.active : undefined}>Compare</Link>
         </li>
       </ul>
     </nav>
