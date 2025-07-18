@@ -21,7 +21,7 @@ def create_app() -> FastAPI:
 
     @app.get("/seasons")
     async def get_seasons(series: str = "F1"):
-        return list(range(2025, 2017, -1))
+        return list(range(2025, 2015, -1))
 
     @app.get("/events/{season}")
     async def get_events(season: int):
