@@ -3,7 +3,7 @@ import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip } from 'rec
 
 export default function LapTimeLine({ data }: { data: any[] }) {
   return (
-    <ResponsiveContainer width="100%" height={300}>
+    <ResponsiveContainer width="100%" height={300} data-testid="lap-chart">
       <LineChart data={data} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
         <XAxis dataKey="lap" />
         <YAxis />
