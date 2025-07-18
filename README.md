@@ -26,3 +26,15 @@ Then execute the test suite from the repository root:
 ```bash
 pytest
 ```
+
+### Frontend Tests
+
+To run the frontend test suite:
+
+```bash
+cd frontend
+npm install
+npm test
+```
+
+The repository contains a single sample test in `frontend/__tests__/sample.test.js`. Additional test files can be added under `frontend/__tests__/`.
