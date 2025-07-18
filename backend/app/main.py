@@ -1,9 +1,6 @@
-from fastapi import FastAPI, Query
-from fastapi import FastAPI, Request, Response
+from fastapi import Depends, FastAPI, Query, Request, Response
 from contextlib import asynccontextmanager
 import httpx
-from fastapi import FastAPI, Depends
-from contextlib import asynccontextmanager
 from sqlalchemy import select, func
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -94,9 +91,6 @@ def create_app() -> FastAPI:
         event: int | None = None,
         limit: int | None = Query(None, ge=0),
         offset: int = Query(0, ge=0),
-    ):
-        data: list = []
-        return slice_list(data, limit, offset)
         db: AsyncSession = Depends(get_db),
     ):
         stmt = (
@@ -110,10 +104,11 @@ def create_app() -> FastAPI:
             stmt = stmt.where(Event.season == season)
         stmt = stmt.group_by(Lap.driver)
         res = await db.execute(stmt)
-        return [
+        data = [
             {"driver": r[0], "laps": r[1], "avg_time": r[2]}
             for r in res.all()
         ]
+        return slice_list(data, limit, offset)
 
     @app.get("/summary/constructors")
     async def summary_constructors(
