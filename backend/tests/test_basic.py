@@ -15,6 +15,24 @@ async def test_series():
         assert res.json() == ['F1']
 
 
+@pytest.mark.asyncio
+async def test_series_limit_offset():
+    transport = ASGITransport(app=app)
+    async with AsyncClient(transport=transport, base_url='http://test') as ac:
+        res = await ac.get('/series?limit=1&offset=0')
+        assert res.status_code == 200
+        assert res.json() == ['F1']
+
+
+@pytest.mark.asyncio
+async def test_seasons_limit_offset():
+    transport = ASGITransport(app=app)
+    async with AsyncClient(transport=transport, base_url='http://test') as ac:
+        res = await ac.get('/seasons?limit=2&offset=1')
+        assert res.status_code == 200
+        assert res.json() == [2024, 2023]
+
+
 def test_get_session_cache(monkeypatch):
     calls = []
 
