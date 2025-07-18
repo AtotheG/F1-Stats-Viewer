@@ -1,5 +1,6 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Request, Response
 from contextlib import asynccontextmanager
+import httpx
 
 from .database import init_db
 from .models import Event, Session, Lap
@@ -50,6 +51,17 @@ def create_app() -> FastAPI:
     @app.post("/compare")
     async def compare():
         return {}
+
+    @app.api_route("/ergast/{path:path}", methods=["GET"])
+    async def ergast_proxy(path: str, request: Request):
+        url = f"https://ergast.com/api/{path}"
+        async with httpx.AsyncClient() as client:
+            resp = await client.get(url, params=dict(request.query_params))
+        return Response(
+            content=resp.content,
+            status_code=resp.status_code,
+            media_type=resp.headers.get("content-type", "application/json"),
+        )
 
     return app
 
