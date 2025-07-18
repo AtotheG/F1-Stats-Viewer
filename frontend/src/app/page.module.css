@@ -170,6 +170,8 @@ a.secondary {
 .title {
   font-size: 2rem;
   font-weight: 600;
+  border-bottom: 2px solid var(--accent);
+  padding-bottom: 4px;
 }
 
 .grid {
