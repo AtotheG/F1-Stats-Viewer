@@ -1,9 +1,29 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, APIRouter
+import httpx
+import os
+
+ERGAST_BASE_URL = os.getenv("ERGAST_BASE_URL", "https://api.jolpi.ca/ergast/f1")
 from contextlib import asynccontextmanager
 
 from .database import init_db
 from .models import Event, Session, Lap
 from .fastf1_adapter import get_session
+
+
+ergast_router = APIRouter(prefix="/ergast/f1")
+
+
+@ergast_router.get("/{path:path}")
+async def proxy_ergast(path: str = "", limit: int | None = None, offset: int | None = None):
+    params = {}
+    if limit is not None:
+        params["limit"] = limit
+    if offset is not None:
+        params["offset"] = offset
+    async with httpx.AsyncClient(base_url=ERGAST_BASE_URL) as client:
+        res = await client.get(f"/{path}", params=params)
+        res.raise_for_status()
+        return res.json()
 
 
 @asynccontextmanager
@@ -14,6 +34,7 @@ async def lifespan(app: FastAPI):
 
 def create_app() -> FastAPI:
     app = FastAPI(title="F1 Weekend Insights", lifespan=lifespan)
+    app.include_router(ergast_router)
 
     @app.get("/series")
     async def get_series():

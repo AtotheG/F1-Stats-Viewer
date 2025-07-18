@@ -56,3 +56,45 @@ async def test_lifespan_calls_init_db(monkeypatch):
             assert res.status_code == 200
 
     assert called, 'init_db should be called during lifespan startup'
+
+
+@pytest.mark.asyncio
+async def test_ergast_proxy(monkeypatch):
+    class DummyClient:
+        def __init__(self, *args, **kwargs):
+            self.base_url = kwargs.get("base_url")
+
+        async def __aenter__(self):
+            return self
+
+        async def __aexit__(self, exc_type, exc, tb):
+            pass
+
+        async def get(self, url, params=None):
+            base = self.base_url
+
+            class Resp:
+                status_code = 200
+
+                def raise_for_status(self):
+                    pass
+
+                def json(self):
+                    return {"url": url, "params": params, "base": base}
+
+            return Resp()
+
+    monkeypatch.setattr(main, "httpx", type("m", (), {"AsyncClient": DummyClient}))
+    monkeypatch.setattr(main, "ERGAST_BASE_URL", "http://ergast")
+
+    app = main.create_app()
+    transport = ASGITransport(app=app)
+    async with AsyncClient(transport=transport, base_url="http://test") as ac:
+        res = await ac.get("/ergast/f1/drivers/", params={"limit": 5, "offset": 1})
+        assert res.status_code == 200
+        assert res.json() == {
+            "url": "/drivers/",
+            "params": {"limit": 5, "offset": 1},
+            "base": "http://ergast",
+        }
+
