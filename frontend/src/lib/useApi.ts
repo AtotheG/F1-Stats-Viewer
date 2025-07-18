@@ -8,7 +8,9 @@ export function useApi<T>(
   return useQuery<T, Error, T, [string, string]>({
     queryKey: [key, path],
     queryFn: async () => {
-      const res = await fetch(path);
+      const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+      const url = baseUrl ? new URL(path, baseUrl).toString() : path;
+      const res = await fetch(url);
       if (!res.ok) throw new Error(res.statusText);
       return res.json() as Promise<T>;
     },
