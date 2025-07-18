@@ -1,0 +1,13 @@
+.form {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.select {
+  flex: 1;
+}
+
+.button {
+  padding: 8px 16px;
+}
