@@ -12,3 +12,17 @@ Postgres and Redis. The compose configuration references the Dockerfiles in the
 
 For convenience, you can start the stack using `run-stack.bat` on Windows or `./run-stack.sh` on Linux/macOS.
 These scripts build and start the containers, wait a few seconds and then open http://localhost:3000 in your browser.
+
+## Running Tests
+
+Install the Python dependencies if they are not already present:
+
+```bash
+pip install -r backend/requirements.txt
+```
+
+Then execute the test suite from the repository root:
+
+```bash
+pytest
+```
