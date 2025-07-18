@@ -13,6 +13,7 @@
 .logo {
   font-weight: 600;
   font-size: 1.25rem;
+  color: var(--accent);
 }
 
 .toggle {
@@ -31,6 +32,10 @@
 .links li a {
   color: inherit;
   text-decoration: none;
+}
+
+.links li a:hover {
+  color: var(--accent);
 }
 
 @media (max-width: 768px) {
