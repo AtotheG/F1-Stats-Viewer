@@ -189,6 +189,20 @@ a.secondary {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
+.controls {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.select {
+  flex: 1;
+}
+
+.button {
+  padding: 8px 16px;
+}
+
 @media (prefers-color-scheme: dark) {
   .chartCard {
     box-shadow: 0 2px 4px rgba(255, 255, 255, 0.05);
