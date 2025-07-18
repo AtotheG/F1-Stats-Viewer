@@ -19,6 +19,14 @@
   max-width: 1200px;
 }
 
+
+.form {
+  display: flex;
+  gap: 8px;
+}
+
+.select {
+  min-width: 200px;
 .select {
   max-width: 300px;
 }
