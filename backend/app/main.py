@@ -1,5 +1,4 @@
 from fastapi import FastAPI, Query, Request, Response, Depends
-from fastapi import Depends, FastAPI, Query, Request, Response
 from contextlib import asynccontextmanager
 import httpx
 from sqlalchemy import select, func
@@ -7,11 +6,6 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from .database import init_db, async_session
 from .models import Event, Session, Lap
-
-async def get_db() -> AsyncSession:
-    async with async_session() as session:
-        yield session
-
 
 async def get_db() -> AsyncSession:
     async with async_session() as session:
