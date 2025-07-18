@@ -30,6 +30,7 @@
     "identity-obj-proxy": "^3.0.0",
     "jest": "^30.0.4",
     "jest-environment-jsdom": "^30.0.4",
-    "typescript": "^5"
+    "typescript": "^5",
+    "@babel/preset-react": "^7.24.7"
   }
 }
