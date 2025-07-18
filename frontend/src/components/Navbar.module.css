@@ -34,6 +34,12 @@
   text-decoration: none;
 }
 
+/* keep both states */
+.links li a.active {
+  color: var(--accent);
+  font-weight: 600;
+}
+
 .links li a:hover {
   color: var(--accent);
 }
@@ -42,6 +48,7 @@
   .toggle {
     display: block;
   }
+
   .links {
     display: none;
     flex-direction: column;
@@ -52,6 +59,7 @@
     color: var(--background);
     padding: 1rem;
   }
+
   .links.show {
     display: flex;
   }
