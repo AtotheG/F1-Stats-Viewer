@@ -18,3 +18,12 @@
   width: 100%;
   max-width: 1200px;
 }
+
+.form {
+  display: flex;
+  gap: 8px;
+}
+
+.select {
+  min-width: 200px;
+}
