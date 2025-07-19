@@ -1,4 +1,5 @@
 import styles from './DriverCard.module.css';
+import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 
 interface Driver {
   id?: string | number;
@@ -17,10 +18,14 @@ export default function DriverCard({ driver }: { driver: Driver }) {
     driver.fullName ||
     `${driver.givenName ?? ''} ${driver.familyName ?? ''}`.trim();
   return (
-    <div className={styles.card}>
-      <h3 className={styles.name}>{name}</h3>
-      {driver.team && <p className={styles.team}>{driver.team}</p>}
-      {driver.constructor && <p className={styles.team}>{driver.constructor}</p>}
-    </div>
+    <Card className={styles.card}>
+      <CardHeader>
+        <CardTitle className={styles.name}>{name}</CardTitle>
+      </CardHeader>
+      <CardContent>
+        {driver.team && <p className={styles.team}>{driver.team}</p>}
+        {driver.constructor && <p className={styles.team}>{driver.constructor}</p>}
+      </CardContent>
+    </Card>
   );
 }

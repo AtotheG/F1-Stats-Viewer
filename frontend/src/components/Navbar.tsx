@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { useState } from 'react';
 import { usePathname } from 'next/navigation';
 import { Menu } from 'lucide-react';
+import { Button } from './ui/button';
 import styles from './Navbar.module.css';
 
 export default function Navbar() {
@@ -13,9 +14,9 @@ export default function Navbar() {
       <Link href="/" className={styles.logo}>
         F1 Insights
       </Link>
-      <button className={styles.toggle} onClick={() => setOpen(!open)} aria-label="Toggle navigation">
+      <Button variant="ghost" size="icon" className={styles.toggle} onClick={() => setOpen(!open)} aria-label="Toggle navigation">
         <Menu size={24} />
-      </button>
+      </Button>
       <ul className={`${styles.links} ${open ? styles.show : ''}`}>
         <li>
           <Link href="/" className={pathname === '/' ? styles.active : undefined}>Home</Link>
