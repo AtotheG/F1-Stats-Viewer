@@ -139,3 +139,24 @@ async def test_driver_endpoints():
             tr = res.json()
             assert tr[0]["time"] == 88.0
 
+@pytest.mark.asyncio
+async def test_events_sessions_endpoints():
+    async with LifespanManager(app):
+        await populate()
+        transport = ASGITransport(app=app)
+        async with AsyncClient(transport=transport, base_url="http://test") as ac:
+            res = await ac.get("/events/2024")
+            assert res.status_code == 200
+            events = res.json()
+            assert len(events) == 2
+            assert events[0]["id"] == 1
+            res = await ac.get("/events/2024?limit=1&offset=1")
+            assert [e["id"] for e in res.json()] == [2]
+
+            res = await ac.get("/sessions/1")
+            assert res.status_code == 200
+            sessions = res.json()
+            assert len(sessions) == 1
+            assert sessions[0]["event_id"] == 1
+            res = await ac.get("/sessions/1?offset=1")
+            assert res.json() == []
