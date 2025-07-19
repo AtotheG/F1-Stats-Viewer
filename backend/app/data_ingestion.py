@@ -2,6 +2,7 @@
 from fastf1 import events
 from fastf1 import get_session
 from sqlalchemy.ext.asyncio import AsyncSession
+import pandas as pd
 from .models import Event, Session as DBSession, Lap
 
 
@@ -23,13 +24,14 @@ async def sync_season(season: int, db: AsyncSession):
         if hasattr(sess, "laps"):
             laps = sess.laps[["LapNumber", "Driver", "LapTime"]]
             for _, lap in laps.iterrows():
-                if lap["LapTime"] is None:
+                lap_time = lap["LapTime"]
+                if lap_time is None or pd.isna(lap_time):
                     continue
                 l = Lap(
                     session_id=db_sess.id,
                     lap=int(lap["LapNumber"]),
                     driver=str(lap["Driver"]),
-                    time=float(lap["LapTime"].total_seconds()),
+                    time=float(lap_time.total_seconds()),
                 )
                 db.add(l)
     await db.commit()

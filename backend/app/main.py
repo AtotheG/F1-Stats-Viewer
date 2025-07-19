@@ -17,10 +17,14 @@ async def get_db() -> AsyncSession:
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     await init_db()
-    async with async_session() as db:
-        existing = await db.execute(select(Event.season).limit(1))
-        if not existing.first():
-            await sync_season(2024, db)
+    if getattr(app.state, "sync_on_startup", False):
+        async with async_session() as db:
+            try:
+                existing = await db.execute(select(Event.season).limit(1))
+                if not existing.first():
+                    await sync_season(2024, db)
+            except Exception:
+                pass
     yield
 
 
@@ -34,8 +38,9 @@ def slice_list(data: list, limit: int | None, offset: int) -> list:
     return data[start:end]
 
 
-def create_app() -> FastAPI:
+def create_app(sync_on_startup: bool = False) -> FastAPI:
     app = FastAPI(title="F1 Weekend Insights", lifespan=lifespan)
+    app.state.sync_on_startup = sync_on_startup
 
     @app.get("/series")
     async def get_series(
@@ -223,4 +228,4 @@ def create_app() -> FastAPI:
     return app
 
 
-app = create_app()
+app = create_app(sync_on_startup=True)
