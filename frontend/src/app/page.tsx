@@ -1,7 +1,7 @@
 'use client';
 
 import dynamic from 'next/dynamic';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import styles from './page.module.css';
 import { useApi } from '../lib/useApi';
 
@@ -12,29 +12,83 @@ const PositionsWaterfall = dynamic(() => import('../components/charts/PositionsW
 const TrackEvolution = dynamic(() => import('../components/charts/TrackEvolution'), { ssr: false });
 
 export default function Home() {
-  const [sessionType, setSessionType] = useState('race');
+  const { data: seasons } = useApi<number[]>('seasons', '/api/seasons');
+  const [season, setSeason] = useState('');
+  const [race, setRace] = useState('');
+  const [session, setSession] = useState('');
   const [path, setPath] = useState('');
+
+  const { data: races } = useApi<any[]>(
+    `events-${season}`,
+    season ? `/api/events/${season}` : '',
+    { enabled: Boolean(season) }
+  );
+
+  const { data: sessions } = useApi<any[]>(
+    `sessions-${race}`,
+    race ? `/api/sessions/${race}` : '',
+    { enabled: Boolean(race) }
+  );
+
   const { data: laps } = useApi<any[]>('laps', path, { enabled: Boolean(path) });
   const sample = laps || [];
 
+  useEffect(() => {
+    setRace('');
+    setSession('');
+  }, [season]);
+
+  useEffect(() => {
+    setSession('');
+  }, [race]);
+
   const handleApply = () => {
-    setPath(`/api/laps?session=${encodeURIComponent(sessionType)}`);
+    if (session) {
+      setPath(`/api/weekend/${session}/laps`);
+    }
   };
 
   return (
     <main className={styles.main}>
-      <h1 className={styles.title}>Race Insights</h1>
+      <h1 className={styles.title}>Session Insights</h1>
       <div className={styles.controls}>
         <select
           className={styles.select}
-          value={sessionType}
-          onChange={(e) => setSessionType(e.target.value)}
+          value={season}
+          onChange={(e) => setSeason(e.target.value)}
         >
-          <option value="fp1">FP1</option>
-          <option value="fp2">FP2</option>
-          <option value="fp3">FP3</option>
-          <option value="qualifying">Qualifying</option>
-          <option value="race">Race</option>
+          <option value="">Season</option>
+          {(seasons || []).map((s) => (
+            <option key={s} value={s}>
+              {s}
+            </option>
+          ))}
+        </select>
+        <select
+          className={styles.select}
+          value={race}
+          onChange={(e) => setRace(e.target.value)}
+          disabled={!season}
+        >
+          <option value="">Race</option>
+          {(races || []).map((r: any) => (
+            <option key={r.id} value={r.id}>
+              {r.name}
+            </option>
+          ))}
+        </select>
+        <select
+          className={styles.select}
+          value={session}
+          onChange={(e) => setSession(e.target.value)}
+          disabled={!race}
+        >
+          <option value="">Session</option>
+          {(sessions || []).map((s: any) => (
+            <option key={s.id} value={s.id}>
+              {s.name}
+            </option>
+          ))}
         </select>
         <button className={styles.button} onClick={handleApply}>Apply</button>
       </div>

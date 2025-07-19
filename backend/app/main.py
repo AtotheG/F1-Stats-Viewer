@@ -48,30 +48,42 @@ def create_app() -> FastAPI:
         return slice_list(data, limit, offset)
 
     @app.get("/events/{season}")
+    @app.get("/api/events/{season}")
     async def get_events(
         season: int,
         limit: int | None = Query(None, ge=0),
         offset: int = Query(0, ge=0),
+        db: AsyncSession = Depends(get_db),
     ):
-        data: list[Event] = []
+        stmt = select(Event).where(Event.season == season).order_by(Event.id)
+        res = await db.execute(stmt)
+        data = res.scalars().all()
         return slice_list(data, limit, offset)
 
     @app.get("/sessions/{event_id}")
+    @app.get("/api/sessions/{event_id}")
     async def get_sessions(
         event_id: int,
         limit: int | None = Query(None, ge=0),
         offset: int = Query(0, ge=0),
+        db: AsyncSession = Depends(get_db),
     ):
-        data: list[Session] = []
+        stmt = select(Session).where(Session.event_id == event_id).order_by(Session.id)
+        res = await db.execute(stmt)
+        data = res.scalars().all()
         return slice_list(data, limit, offset)
 
     @app.get("/weekend/{session_id}/laps")
+    @app.get("/api/weekend/{session_id}/laps")
     async def get_laps(
         session_id: int,
         limit: int | None = Query(None, ge=0),
         offset: int = Query(0, ge=0),
+        db: AsyncSession = Depends(get_db),
     ):
-        data: list[Lap] = []
+        stmt = select(Lap).where(Lap.session_id == session_id).order_by(Lap.lap)
+        res = await db.execute(stmt)
+        data = res.scalars().all()
         return slice_list(data, limit, offset)
 
     @app.get("/weekend/{session_id}/stints")
