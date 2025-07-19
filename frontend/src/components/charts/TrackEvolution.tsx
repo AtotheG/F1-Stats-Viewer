@@ -16,7 +16,11 @@ export default function TrackEvolution({ data }: { data: LapData[] }) {
     grouped[lap].count += 1;
   });
   const chartData = Object.keys(grouped)
-    .map((lap) => ({ lap: Number(lap), time: grouped[lap].sum / grouped[lap].count }))
+    .map((lap) => {
+      const key = Number(lap);
+      const { sum, count } = grouped[key];
+      return { lap: key, time: sum / count };
+    })
     .sort((a, b) => a.lap - b.lap);
 
   return (
