@@ -3,8 +3,11 @@ import { useState } from 'react';
 import { useApi } from '../../../lib/useApi';
 import DriverCard from '../../../components/DriverCard';
 import DriverSeasonsTable from '../../../components/DriverSeasonsTable';
+import type { PageProps } from 'next';
 
-export default function DriverPage({ params }: { params: { id: string } }) {
+type Props = PageProps<{ id: string }>;
+
+export default function DriverPage({ params }: Props) {
   const id = params.id;
   const { data: driver } = useApi<any>(`driver-${id}`, `/api/driver/${id}`);
   const { data: seasons } = useApi<any[]>(`driver-${id}-seasons`, `/api/driver/${id}/seasons`);
