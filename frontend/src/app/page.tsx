@@ -100,13 +100,13 @@ export default function Home() {
           <TyreStintBar data={sample} />
         </div>
         <div className={styles.chartCard}>
-          <StrategyGantt />
+          <StrategyGantt data={sample} />
         </div>
         <div className={styles.chartCard}>
-          <PositionsWaterfall />
+          <PositionsWaterfall data={sample} />
         </div>
         <div className={styles.chartCard}>
-          <TrackEvolution />
+          <TrackEvolution data={sample} />
         </div>
       </div>
     </main>
