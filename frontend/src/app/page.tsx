@@ -15,7 +15,7 @@ export default function Home() {
   const { data: seasons } = useApi<number[]>('seasons', '/api/seasons');
   const [season, setSeason] = useState('');
   const [race, setRace] = useState('');
-  const [session, setSession] = useState('');
+  const [sessionId, setSessionId] = useState('');
   const [path, setPath] = useState('');
 
   const { data: races } = useApi<any[]>(
@@ -35,16 +35,16 @@ export default function Home() {
 
   useEffect(() => {
     setRace('');
-    setSession('');
+    setSessionId('');
   }, [season]);
 
   useEffect(() => {
-    setSession('');
+    setSessionId('');
   }, [race]);
 
   const handleApply = () => {
-    if (session) {
-      setPath(`/api/weekend/${session}/laps`);
+    if (sessionId) {
+      setPath(`/api/weekend/${sessionId}/laps`);
     }
   };
 
@@ -79,8 +79,8 @@ export default function Home() {
         </select>
         <select
           className={styles.select}
-          value={session}
-          onChange={(e) => setSession(e.target.value)}
+          value={sessionId}
+          onChange={(e) => setSessionId(e.target.value)}
           disabled={!race}
         >
           <option value="">Session</option>
