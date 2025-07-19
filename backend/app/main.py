@@ -6,6 +6,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from .database import init_db, async_session
 from .models import Event, Session, Lap
+from .data_ingestion import sync_season
+
 
 async def get_db() -> AsyncSession:
     async with async_session() as session:
@@ -15,6 +17,10 @@ async def get_db() -> AsyncSession:
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     await init_db()
+    async with async_session() as db:
+        existing = await db.execute(select(Event.season).limit(1))
+        if not existing.first():
+            await sync_season(2024, db)
     yield
 
 
@@ -114,10 +120,7 @@ def create_app() -> FastAPI:
             stmt = stmt.where(Event.season == season)
         stmt = stmt.group_by(Lap.driver)
         res = await db.execute(stmt)
-        data = [
-            {"driver": r[0], "laps": r[1], "avg_time": r[2]}
-            for r in res.all()
-        ]
+        data = [{"driver": r[0], "laps": r[1], "avg_time": r[2]} for r in res.all()]
         return slice_list(data, limit, offset)
 
     @app.get("/summary/constructors")
@@ -131,9 +134,7 @@ def create_app() -> FastAPI:
         return slice_list(data, limit, offset)
 
     @app.get("/driver/{driver_id}/summary")
-    async def driver_summary(
-        driver_id: str, db: AsyncSession = Depends(get_db)
-    ):
+    async def driver_summary(driver_id: str, db: AsyncSession = Depends(get_db)):
         stmt = select(func.count(Lap.id), func.avg(Lap.time)).where(
             Lap.driver == driver_id
         )
@@ -142,9 +143,7 @@ def create_app() -> FastAPI:
         return {"driver": driver_id, "laps": count, "avg_time": avg_time}
 
     @app.get("/driver/{driver_id}/seasons")
-    async def driver_seasons(
-        driver_id: str, db: AsyncSession = Depends(get_db)
-    ):
+    async def driver_seasons(driver_id: str, db: AsyncSession = Depends(get_db)):
         stmt = (
             select(Event.season)
             .distinct()
@@ -169,9 +168,7 @@ def create_app() -> FastAPI:
             .order_by(Event.id)
         )
         res = await db.execute(stmt)
-        return [
-            {"event": r[0], "laps": r[1], "avg_time": r[2]} for r in res.all()
-        ]
+        return [{"event": r[0], "laps": r[1], "avg_time": r[2]} for r in res.all()]
 
     @app.get("/driver/{driver_id}/cumulative-points")
     async def driver_cumulative_points(
@@ -206,9 +203,7 @@ def create_app() -> FastAPI:
             .limit(limit)
         )
         res = await db.execute(stmt)
-        return [
-            {"session_id": r[0], "lap": r[1], "time": r[2]} for r in res.all()
-        ]
+        return [{"session_id": r[0], "lap": r[1], "time": r[2]} for r in res.all()]
 
     @app.post("/compare")
     async def compare():
