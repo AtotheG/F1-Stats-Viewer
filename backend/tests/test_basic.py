@@ -36,6 +36,15 @@ async def test_seasons_limit_offset():
         assert res.json() == [2024, 2023]
 
 
+@pytest.mark.asyncio
+async def test_api_prefix_alias():
+    transport = ASGITransport(app=app)
+    async with AsyncClient(transport=transport, base_url='http://test') as ac:
+        res = await ac.get('/api/seasons')
+        assert res.status_code == 200
+        assert res.json()[0] == 2025
+
+
 def test_get_session_cache(monkeypatch):
     calls = []
 
