@@ -15,7 +15,9 @@ These scripts build and start the containers, wait a few seconds and then open h
 The backend API is reachable at http://localhost:8000 when the compose stack is running.
 The frontend issues requests using `/api` paths. If `NEXT_PUBLIC_API_BASE_URL` is
 set, Next.js rewrites those paths to `${NEXT_PUBLIC_API_BASE_URL}/api/*`, letting
-the frontend stay agnostic of the backend's host.
+the frontend stay agnostic of the backend's host. The provided `docker-compose.yml`
+defines this variable so the frontend automatically points at the backend
+container.
 
 ## Configuration
 
